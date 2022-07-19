@@ -4,9 +4,17 @@
 #include <cmath>
 using namespace std;
 
-Eigen::Vector3f get_rotation() {
+void rotate2d(Eigen::Vector3f& point, float angle) {
+    float rad = float(angle) / 180.0f * float(EIGEN_PI);
+    Eigen::Matrix3f m_rotation;
+    m_rotation << float(cos(rad)), float(-sin(rad)), 0.0f, float(sin(rad)), float(cos(rad)), 0.0f, 0.0f, 0.0f, 1.0f;
+    point = m_rotation * point;
+}
 
-    return;
+void translate2d(Eigen::Vector3f& point, float tx, float ty) {
+    Eigen::Vector3f v_translate(float(tx), float(ty), 0);
+    auto rotated_point = point + v_translate;
+    point = Eigen::Vector3f(rotated_point(0, 0), rotated_point(1, 0), rotated_point(2, 0));
 }
 
 int main()
@@ -56,5 +64,11 @@ int main()
     cout << "Example of vector-matrix multiply \n";
     cout << i * v << endl;
 
+
+    cout << "Point P = (2, 1), 45 degree CCW rotation with respect to (0, 0), followed with (1, 2) translation." << endl;
+    Eigen::Vector3f P(2, 1, 1);
+    rotate2d(P, 45);
+    translate2d(P, 1, 2);
+    cout << P << endl;
     return 0;
 }
