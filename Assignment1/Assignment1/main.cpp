@@ -45,6 +45,29 @@ Eigen::Matrix4f get_model_matrix(float rotation_angle)
     return model;
 }
 
+//
+Eigen::Matrix4f get_model_matrix(Eigen::Vector4f axis, float rotation_angle)
+{
+    Eigen::Matrix4f model = Eigen::Matrix4f::Identity();
+
+    // TODO: Implement this function
+    // Create the model matrix for rotating the triangle around the Z axis.
+    // Then return it.
+
+    // Z-axis rotation matrix
+    // cos(angle) -sin(angle) 0 0
+    // sin(angle) cos(angle)  0 0
+    // 0          0           1 0
+    // 0          0           0 1
+    float angle_rad = to_rad(rotation_angle);
+    model(0, 0) = cos(angle_rad);
+    model(0, 1) = -sin(angle_rad);
+    model(1, 0) = sin(angle_rad);
+    model(1, 1) = cos(angle_rad);
+
+    return model;
+}
+
 Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
                                       float zNear, float zFar)
 {
@@ -70,7 +93,7 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
 
     float fov_rad = to_rad(eye_fov);
 
-    float hNear = 2 * zNear * tan(fov_rad);
+    float hNear = 2 * zNear * tan(fov_rad/2);
     float wNear = aspect_ratio * hNear;
     float length = abs(zFar - zNear);
 
@@ -152,11 +175,9 @@ int main(int argc, const char** argv)
 
         if (key == 'a') {
             angle += 10;
-            std::cout << "a pressed!" << std::endl;
         }
         else if (key == 'd') {
             angle -= 10;
-            std::cout << "d pressed!" << std::endl;
         }
     }
 
